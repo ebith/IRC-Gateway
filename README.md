@@ -2,6 +2,9 @@
 
 ## Usage
 ``` JavaScript
+process.env.PORT = 6667;
+process.env.NODE_ENV = 'development';
+
 const ig = new (require('irc-gateway'))({name: 'hoge-fuga-piyo'});
 
 ig.on('connect', () => {
