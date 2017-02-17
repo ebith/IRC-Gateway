@@ -41,11 +41,17 @@ class IrcGateway extends EventEmitter {
               // CTCP Action
               if (args[1] === ':\u0001ACTION') {
                 const action = args.slice(2).join(' ').replace('\u0001', '');
-                this.emit('action', action);
+                this.emit('action', args[0], action);
               } else {
                 const text = args.slice(1).join(' ').replace(/^:/, '');
-                this.emit('privmsg', text);
+                this.emit('privmsg', args[0], text);
               }
+              break;
+            case 'TOPIC':
+              this.topic(args[0], args[1])
+              break;
+            case 'JOIN':
+              this.join(args);
               break;
           }
         }
@@ -62,17 +68,17 @@ class IrcGateway extends EventEmitter {
   sendRaw(msg) {
     this.emit('send', msg);
   }
-  join(channel) {
-    this.emit('send', `:${this.nick} JOIN ${channel.join()}`);
+  join(channels) {
+    this.emit('send', `:${this.nick} JOIN ${channels.join()}`);
   }
   topic(channel, text) {
-    this.emit('send', `:${this.nick} TOPIC ${channel} ${text}`);
+    this.emit('send', `:${this.nick} TOPIC ${channel} :${text}`);
   }
   privmsg(channel, text, nick) {
-    this.emit('send', `:${nick || this.nick} PRIVMSG ${channel} ${text}`);
+    this.emit('send', `:${nick || this.nick} PRIVMSG ${channel} :${text}`);
   }
   notice(channel, text, nick) {
-    this.emit('send', `:${nick || this.nick} NOTICE ${channel} ${text}`);
+    this.emit('send', `:${nick || this.nick} NOTICE ${channel} :${text}`);
   }
   mode(channel, mode, user) {
     this.emit('send', `:${this.nick} MODE ${channel} ${mode} ${user ? this.nick : ''}`);

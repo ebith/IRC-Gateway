@@ -3,9 +3,10 @@
 ## Usage
 ``` JavaScript
 process.env.PORT = 6667;
-process.env.NODE_ENV = 'development';
+process.env.NODE_ENV = 'development'; // Verbose
 
-const ig = new (require('irc-gateway'))({name: 'hoge-fuga-piyo'});
+const IRC-Gateway = require('irc-gateway');
+const ig = new IRC-Gateway({name: 'hoge-fuga-piyo'});
 
 ig.on('connect', () => {
   ig.join(['#foo']);
